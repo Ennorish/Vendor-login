@@ -1,61 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Vendor Portal Login</title>
-  </head>
-  <body style="font-family: sans-serif; text-align: center; padding: 50px">
-    <h2>Vendor Portal Login</h2>
-    <p>Please sign in with your Google account to continue.</p>
-    <button id="loginBtn" style="padding: 12px 20px; font-size: 16px">
-      Login with Google
-    </button>
+<head>
+  <meta charset="UTF-8" />
+  <title>Vendor Portal Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #F8FAFC, #EEF2F7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-    <script type="module">
-      // ✅ Firebase SDK imports
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-      import {
-        getAuth,
-        signInWithPopup,
-        GoogleAuthProvider,
-      } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+    .card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 0.8s ease;
+    }
 
-      // ✅ Your Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyBdMvSH1t_SOvsVqhYvY7IEES41Ew_5EtU",
-        authDomain: "vendor-portal-9aad3.firebaseapp.com",
-        projectId: "vendor-portal-9aad3",
-        storageBucket: "vendor-portal-9aad3.firebasestorage.app",
-        messagingSenderId: "86961514503",
-        appId: "1:86961514503:web:a9cd203daefc14c663e2a2",
-        measurementId: "G-WY4RZGFPLN",
-      };
+    h2 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 1.75rem;
+    }
 
-      // ✅ Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      const auth = getAuth(app);
-      const provider = new GoogleAuthProvider();
+    p {
+      margin-bottom: 2rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
 
-      // ✅ Google Login + Redirect
-      document.getElementById("loginBtn").addEventListener("click", () => {
-        signInWithPopup(auth, provider)
-          .then((result) => {
-            const email = result.user.email;
-            const encodedEmail = encodeURIComponent(email);
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-            const baseFormUrl = "https://tally.so/r/wg65Zl";
-            const finalUrl = `${baseFormUrl}?vendorEmail=${encodedEmail}`;
+    button:hover {
+      background-color: #3367D6;
+    }
 
-            // 🔁 Redirect to the form with vendor email prefilled
-            window.location.href = finalUrl;
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("Login failed. Please try again.");
-          });
-      });
-    </script>
-  </body>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Welcome to the Vendor Portal</h2>
+    <p>Please log in with your Google account to securely access your onboarding or dispatch forms.</p>
+    <button id="loginBtn">Login with Google</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithPopup,
+      GoogleAuthProvider,
+    } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBdMvSH1t_SOvsVqhYvY7IEES41Ew_5EtU",
+      authDomain: "vendor-portal-9aad3.firebaseapp.com",
+      projectId: "vendor-portal-9aad3",
+      storageBucket: "vendor-portal-9aad3.firebasestorage.app",
+      messagingSenderId: "86961514503",
+      appId: "1:86961514503:web:a9cd203daefc14c663e2a2",
+      measurementId: "G-WY4RZGFPLN",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const email = result.user.email;
+          const encodedEmail = encodeURIComponent(email);
+          const baseFormUrl = "https://tally.so/r/wg65Zl"; // Replace with your actual form
+          const finalUrl = `${baseFormUrl}?vendorEmail=${encodedEmail}`;
+          window.location.href = finalUrl;
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Login failed. Please try again.");
+        });
+    });
+  </script>
+</body>
 </html>
