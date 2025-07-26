@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vendor Portal Login</title>
+  </head>
+  <body style="font-family: sans-serif; text-align: center; padding: 50px">
+    <h2>Vendor Portal Login</h2>
+    <p>Please sign in with your Google account to continue.</p>
+    <button id="loginBtn" style="padding: 12px 20px; font-size: 16px">
+      Login with Google
+    </button>
+
+    <script type="module">
+      // ✅ Firebase SDK imports
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+      } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+
+      // ✅ Your Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBdMvSH1t_SOvsVqhYvY7IEES41Ew_5EtU",
+        authDomain: "vendor-portal-9aad3.firebaseapp.com",
+        projectId: "vendor-portal-9aad3",
+        storageBucket: "vendor-portal-9aad3.firebasestorage.app",
+        messagingSenderId: "86961514503",
+        appId: "1:86961514503:web:a9cd203daefc14c663e2a2",
+        measurementId: "G-WY4RZGFPLN",
+      };
+
+      // ✅ Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
+      // ✅ Google Login + Redirect
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            const email = result.user.email;
+            const encodedEmail = encodeURIComponent(email);
+
+            const baseFormUrl = "https://tally.so/r/wg65Zl";
+            const finalUrl = `${baseFormUrl}?vendorEmail=${encodedEmail}`;
+
+            // 🔁 Redirect to the form with vendor email prefilled
+            window.location.href = finalUrl;
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Login failed. Please try again.");
+          });
+      });
+    </script>
+  </body>
+</html>
